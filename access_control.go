@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 )
@@ -18,7 +19,7 @@ type Musics struct {
 	Owner string `json:Owner`
 }
 
-func (contract *Musics) InitAssets(ctx contractapi.TransactionContextInterface) (string, error) {
+func (contract *TestContract) InitAssets(ctx contractapi.TransactionContextInterface) (string, error) {
 	/*
 		fucn InitAssets() is method of the Asset Struct
 		Usage: It Adds Dummy  Assets To The Legder
@@ -79,5 +80,14 @@ func (contract *Musics) InitAssets(ctx contractapi.TransactionContextInterface) 
 }
 
 func main() {
-
+	// This Will Initiate The Chaincode On Low Level Api (ShimApi) To Interact
+	testChaincode, err := contractapi.NewChaincode(&TestContract{})
+	if err != nil {
+		log.Panicf("Failed To Initiate Chainode %v", err)
+	}
+	// It Will Start The Chaincode For Further Interatction (Like Deploying Contract To The Ethereum)
+	err = testChaincode.Start()
+	if err != nil {
+		log.Panicf("Failed To Start Chainode")
+	}
 }
